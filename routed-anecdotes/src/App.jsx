@@ -9,9 +9,7 @@ import useAnecdotes from './hooks/useAnecdotes'
 
 const App = () => {
 
-  const { anecdotes } = useAnecdotes()
-
-  const addAnecdote = (anecdote) => {}
+  const { anecdotes, addAnecdote } = useAnecdotes()
 
   return (
     <Router>
