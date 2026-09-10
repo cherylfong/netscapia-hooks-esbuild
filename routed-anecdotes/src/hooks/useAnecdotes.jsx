@@ -7,7 +7,7 @@ const useAnecdotes = () => {
 
     useEffect(() => {
         anecdoteService.getAll().then(data => setAnecdotes(data))
-    }, [anecdotes])
+    }, [])
 
     const addAnecdote = async (anecdote) => {
 

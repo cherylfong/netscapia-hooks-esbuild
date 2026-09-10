@@ -13,9 +13,9 @@ const CreateNew = () => {
 
   const { addAnecdote } = useAnecdotes()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    addAnecdote({
+    await addAnecdote({
       content: contentField.inputProps.value,
       author: authorField.inputProps.value,
       info: infoField.inputProps.value,
