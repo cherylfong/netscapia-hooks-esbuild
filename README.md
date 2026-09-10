@@ -5,6 +5,8 @@ This is [part 7 of the fullstack open course](https://fullstackopen.com/en/part7
 <details>
 <summary>part7-a</summary>
 
+[![routed anecdotes tests](https://github.com/cherylfong/netscapia-hooks-esbuild/actions/workflows/routed-anecdotes.yml/badge.svg?branch=part7-a)](https://github.com/cherylfong/netscapia-hooks-esbuild/actions/workflows/routed-anecdotes.yml)
+
 </details>
 
 <details>
