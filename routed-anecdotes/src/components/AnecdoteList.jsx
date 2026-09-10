@@ -2,7 +2,7 @@ import useAnecdotes from '../hooks/useAnecdotes'
 
 const AnecdoteList = () => {
 
-  const { anecdotes, removeAnecdote } = useAnecdotes()
+  const { anecdotes, deleteAnecdote } = useAnecdotes()
 
   return (
     <div>
@@ -10,10 +10,9 @@ const AnecdoteList = () => {
       <ul>
         {anecdotes.map(anecdote =>
           <li key={anecdote.id}>
-            {anecdote.content}<button onClick={() => removeAnecdote(anecdote.id)}>delete</button>
+            {anecdote.content}<button onClick={() => deleteAnecdote(anecdote.id)}>delete</button>
           </li>
-        )
-        }
+        )}
       </ul>
     </div>
   )
