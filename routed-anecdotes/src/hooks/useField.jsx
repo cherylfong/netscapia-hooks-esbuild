@@ -1,22 +1,24 @@
 import { useState } from 'react'
 
-export const useField = (type) => {  
-const [value, setValue] = useState('')
+export const useField = (type) => {
+    const [value, setValue] = useState('')
 
-  const onChange = (event) => {
-    setValue(event.target.value)
-  }
+    const onChange = (event) => {
+        setValue(event.target.value)
+    }
 
-  const clearFields = () => {
-    setValue('')
-  }
+    const clearFields = () => {
+        setValue('')
+    }
 
-  return {
-    type,
-    value,
-    onChange,
-    clearFields
-  }
+    return {
+        inputProps: {
+            type,
+            value,
+            onChange,
+        },
+        clearFields,
+    }
 }
 
 export default useField

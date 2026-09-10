@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom"
 
 import useField from '../hooks/useField'
+import useAnecdotes from '../hooks/useAnecdotes'
 
-const CreateNew = ({ addNew }) => {
+const CreateNew = () => {
 
   const contentField = useField('text')
   const authorField = useField('text')
@@ -10,12 +11,14 @@ const CreateNew = ({ addNew }) => {
 
   const navigate = useNavigate()
 
+  const { addAnecdote } = useAnecdotes()
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    addNew({
-      content: contentField.value,
-      author: authorField.value,
-      info: infoField.value,
+    addAnecdote({
+      content: contentField.inputProps.value,
+      author: authorField.inputProps.value,
+      info: infoField.inputProps.value,
       votes: 0
     })
     navigate("/")
@@ -28,19 +31,19 @@ const CreateNew = ({ addNew }) => {
         <div>
           content
           <input
-            {...contentField}
+            {...contentField.inputProps}
           />
         </div>
         <div>
           author
           <input
-            {...authorField}
+            {...authorField.inputProps}
           />
         </div>
         <div>
           url for more info
           <input
-            {...infoField}
+            {...infoField.inputProps}
           />
         </div>
         <button>create</button>

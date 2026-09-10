@@ -7,18 +7,27 @@ const useAnecdotes = () => {
 
     useEffect(() => {
         anecdoteService.getAll().then(data => setAnecdotes(data))
-    }, [])
+    }, [anecdotes])
 
-    const addAnecdote = (anecdote) => {
+    const addAnecdote = async (anecdote) => {
 
-        anecdoteService.createNew(anecdote).then(data =>
+        await anecdoteService.createNew(anecdote).then(data =>
             setAnecdotes(anecdotes.concat(data))
         )
     }
 
+    const removeAnecdote = async (id) => {
+
+        await anecdoteService.remove(id).then( 
+            setAnecdotes(anecdotes.filter(a => a.id !== id) )
+        )
+
+    }
+
     return {
         anecdotes,
-        addAnecdote
+        addAnecdote, 
+        removeAnecdote
     }
 
 }
