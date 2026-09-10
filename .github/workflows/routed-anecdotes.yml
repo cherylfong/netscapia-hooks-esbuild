@@ -3,7 +3,7 @@ name: routed anecdotes tests
 on:
   push:
     branches:
-      - xmain
+      - part7-a
 
 jobs:
   test:
