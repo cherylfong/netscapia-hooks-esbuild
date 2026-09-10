@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "server": "json-server --port 3001 db.json",
     "start:test": "npm run dev -- --port 5173",
-    "server:test": "npx json-server --port 3002 --watch db.json"
+    "server:test": "npx json-server --port 3001 --watch db.json"
   },
   "dependencies": {
     "react": "^19.2.8",
