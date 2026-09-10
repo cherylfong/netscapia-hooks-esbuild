@@ -7,10 +7,15 @@ const [value, setValue] = useState('')
     setValue(event.target.value)
   }
 
+  const clearFields = () => {
+    setValue('')
+  }
+
   return {
     type,
     value,
-    onChange
+    onChange,
+    clearFields
   }
 }
 

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import useField from '../hooks/useField'
 
 const CreateNew = ({ addNew }) => {
- 
+
   const contentField = useField('text')
   const authorField = useField('text')
   const infoField = useField('text')
@@ -13,11 +13,12 @@ const CreateNew = ({ addNew }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    addNew({ 
-      content: contentField.value, 
-      author: authorField.value, 
-      info: infoField.value, 
-      votes: 0 })
+    addNew({
+      content: contentField.value,
+      author: authorField.value,
+      info: infoField.value,
+      votes: 0
+    })
     navigate("/")
   }
 
@@ -28,22 +29,28 @@ const CreateNew = ({ addNew }) => {
         <div>
           content
           <input
-          {...contentField}
+            {...contentField}
           />
         </div>
         <div>
           author
           <input
-          {...authorField}
+            {...authorField}
           />
         </div>
         <div>
           url for more info
           <input
-          {...infoField}
+            {...infoField}
           />
         </div>
         <button>create</button>
+        <button onClick={(e) => {
+          e.preventDefault()
+          contentField.clearFields()
+          authorField.clearFields()
+          infoField.clearFields()
+        }} >reset</button>
       </form>
     </div>
   )
