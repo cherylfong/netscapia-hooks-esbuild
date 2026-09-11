@@ -11,11 +11,18 @@ This is [part 7 of the fullstack open course](https://fullstackopen.com/en/part7
 
 <details>
 <summary>part7-b</summary>
-
+NONE 🪹
 </details>
+<br/>
 
 <details>
 <summary>part7-c</summary>
+
+</details>
+<br/>
+
+<details>
+<summary>part7-d</summary>
 
 </details>
 
