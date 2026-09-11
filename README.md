@@ -18,7 +18,7 @@ NONE 🪹
 
 <details>
 <summary>part7-c</summary>
-
+NONE 🪹
 </details>
 <br/>
 
