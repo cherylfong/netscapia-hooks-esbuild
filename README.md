@@ -8,6 +8,7 @@ This is [part 7 of the fullstack open course](https://fullstackopen.com/en/part7
 [![routed anecdotes tests](https://github.com/cherylfong/netscapia-hooks-esbuild/actions/workflows/routed-anecdotes.yml/badge.svg?branch=part7-a)](https://github.com/cherylfong/netscapia-hooks-esbuild/actions/workflows/routed-anecdotes.yml)
 
 </details>
+<br/>
 
 <details>
 <summary>part7-b</summary>
@@ -610,6 +611,267 @@ Transpilation alone is not sufficient for features that are syntactically valid 
 
 Polyfills are handled by the plugin _`@vitejs/plugin-legacy`_. It can automatically include the necessary polyfills based on your browser targets.
 
-If a specific polyfill is needed without the legacy plugin,install it directly and import it at the top of the entry file.
+If a specific polyfill is needed without the legacy plugin, install it directly and import it at the top of the entry file.
 
 Specific browser APIs can be referenced at https://caniuse.com or [Mozilla's MDN documentation](https://developer.mozilla.org/).
+
+### Part 7 sub c. | Miscellaneous
+
+#### Class Components
+
+Hook functionality only appeared after version 16.8 of React. Component state had to be defined using Javascript [classes](https://reactjs.org/docs/state-and-lifecycle.html#converting-a-function-to-a-class) for earlier versions.
+
+See `./class-example` for an example of using classes.
+
+Class Components can only contain one state. So if the state is made up of multiple "parts", they should be stored as **properties** of the state.
+
+The correct place to trigger the fetching of data from a server is inside the [lifecycle method](https://react.dev/reference/react/Component#adding-lifecycle-methods-to-a-class-component) [componentDidMount](https://react.dev/reference/react/Component#componentdidmount), which is executed once right after the first time a component renders.
+
+Calling the method `setState()` will always trigger the rerender of the Class Component, i.e. calling the method `render()`.
+
+```javascript
+const App = () => {
+  const [anecdotes, setAnecdotes] = useState([])
+  const [current, setCurrent] = useState(0)
+
+  useEffect(() =>{
+    axios.get('http://localhost:3001/anecdotes').then(response => {
+      setAnecdotes(response.data)
+    })
+  },[])
+
+  const handleClick = () => {
+    setCurrent(Math.round(Math.random() * (anecdotes.length - 1)))
+  }
+
+  if (anecdotes.length === 0) {
+    return <div>no anecdotes...</div>
+  }
+
+  return (
+    <div>
+      <h1>anecdote of the day</h1>
+      <div>{anecdotes[current].content}</div>
+      <button onClick={handleClick}>next</button>
+    </div>
+  )
+}
+```
+
+The difference between class components and functional components are:
+
+1. The state of a Class component is a single object, and that the state is updated using the method setState.
+
+1. States in Functional components can consist of multiple different variables, with all of them having their own update function.
+
+In 2026, **Class Components are largely a historical artifact**. The React documentation itself treats Class components as a legacy API.
+
+#### Error Boundary
+
+An [error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary) is a component that catches JavaScript errors anywhere in its child component tree and displays a fallback UI instead of crashing the whole application.
+
+As of 2026, React has not yet introduced a hook-based alternative for this, so **error boundaries must still be implemented as Class components.**
+
+An example of error boundary usage can be found in `./class-example/ErrorBoundary.jsx`.
+
+The two key lifecycle methods are:
+
+- `getDerivedStateFromError` - updates state so the next render shows the fallback UI.
+- `componentDidCatch` - a place to log the error to an error reporting service.
+
+Because this is the one remaining use case for Class components, many projects use the [react-error-boundary](https://github.com/bvaughn/react-error-boundary) library, which wraps the class-based machinery behind a convenient Functional component API.
+
+**Don't never have to write a Class component for error boundary manually.**
+
+#### Frontend and Backend in the same Repository
+
+Keep Vite frontend in a client directory and the Express backend in a server directory, each with their own package.json.
+
+The root of the repository gets a third package.json that acts as a convenience wrapper with scripts to run both together.
+
+```markdown
+app/
+  package.json        (root, scripts only)
+  client/
+    package.json      (Vite + React)
+    vite.config.js
+    src/
+      App.jsx
+  server/
+    package.json      (Express)
+    index.js
+```
+
+The Express server in `server/index.js` serves the API and, in production, also serves the built frontend from the `client/dist` directory.
+
+This is `server/index.js`:
+
+```javascript
+const express = require('express')
+const path = require('path')
+
+const app = express()
+
+app.use(express.json())
+
+app.get('/api/ping', (req, res) => {
+  res.json({ message: 'pong', time: new Date().toISOString() })
+})
+
+// serve the built Vite frontend in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/dist')))
+  app.get('/*splat', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'))
+  })
+}
+
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => console.log(`server running on port ${PORT}`))
+```
+
+For development, the Vite dev server runs on its own port and needs to forward API requests to Express which isc onfigured in `client/vite.config.js`:
+
+```javascript
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    proxy: {
+      '/api': 'http://localhost:3001',
+    },
+  },
+})
+```
+
+The root `package.json` is responsible for launching the frontend and backend together:
+
+```json
+{
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix client",
+    "start": "NODE_ENV=production npm start --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0"
+  }
+}
+```
+
+[`concurrently`](https://github.com/open-cli-tools/concurrently) in the `dev` script above:
+
+A small utility that runs multiple commands at the same time and merges their output into a single terminal stream. Without it you would have to open two separate terminals, one for the backend and one for the frontend.
+
+`--prefix` flag tells npm which subdirectory to treat as the working directory.
+
+Since each part of the project has its own package.json, the directory needs to be explicity when installing new packages. The same `--prefix` flag works for npm install as well:
+
+```bash
+npm install axios --prefix client     # add to the frontend
+npm install mongoose --prefix server  # add to the backend
+```
+
+Alternatively, simply `cd` into the target directory and run `npm install` from there.
+
+#### React Application Code Organization
+
+Common covention used by [Next.js](https://nextjs.org/docs/pages/building-your-application/routing) and is described in the [React FAQ on file structure](https://legacy.reactjs.org/docs/faq-structure.html):
+
+```bash
+src/
+  App.jsx
+  pages/
+    HomePage.jsx
+    BlogPage.jsx
+    UserPage.jsx
+  components/
+    Blog.jsx
+    BlogList.jsx
+    LoginForm.jsx
+    Notification.jsx
+  hooks/
+    useField.js
+  services/
+    blogs.js
+    users.js
+  stores/
+    blogStore.js
+    notificationStore.js
+```
+
+A common response to solving the a feature that is scattered across different every directory this is to group files by feature instead. 
+
+The[ Feature-Sliced Design methodology](https://feature-sliced.design/) formalises this approach, and the [bulletproof-react](https://github.com/alan2207/bulletproof-react) project is a widely-referenced example of applying it in practice.
+
+**There is no single correct way to organize a large project. The right choice depends on the size and nature of the application.**
+
+#### Reflecting Changes on the Frontend with the Backend
+
+Solves, "How to keep the UI in sync with a server that changes independently?"
+
+[Polling](https://en.wikipedia.org/wiki/Polling_(computer_science))
+
+> The frontend asks the server for fresh data at a fixed interval. For example using `setInterval`.
+> 
+> Polling is easy to implement but wasteful, because most requests return nothing new.
+
+[WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
+
+>  A persistent two-way connection between the browser and the server is formed. The server can then push updates to connected clients the moment something changes, without the client having to ask. 
+>
+> WebSockets are now supported by all modern browsers.
+
+
+Alternatives to WebSockets:
+
+- The [Socket.io](https://socket.io/) library wraps WebSockets with a higher-level API and adds automatic reconnection and other conveniences.
+
+- GraphQL has a subscription mechanism that lets the server notify clients about data changes in a structured way.
+
+#### React and Node Application Security
+
+[SQL Injection](https://stackoverflow.com/questions/332365/how-does-the-sql-injection-from-the-bobby-tables-xkcd-comic-work) are prevented using [parameterized queries](https://security.stackexchange.com/questions/230211/why-are-stored-procedures-and-prepared-statements-the-preferred-modern-methods-f). This is where user input isn't mixed with the SQL query, but the database inserts the input values at placeholders in the query.
+
+Injection attacks are also possible in NoSQL databases. [Mongoose prevents them by sanitizing the queries](https://web.archive.org/web/20220901024441/https://blog.websecurify.com/2014/08/hacking-nodejs-and-mongodb.html).
+
+Cross-site scripting (XSS) is an attack where it is possible to inject malicious JavaScript code into a legitimate web application. The malicious code would then be executed in the browser of the victim.
+
+React [takes care of sanitizing data in variables](https://legacy.reactjs.org/docs/introducing-jsx.html#jsx-prevents-injection-attacks). Some versions of React have been [vulnerable to XSS attacks](https://medium.com/dailyjs/exploiting-script-injection-flaws-in-reactjs-883fb1fe36c1). The security holes have of course been patched, but there is no guarantee that there couldn't be any more.
+
+It is recommended to be vigilant on security updates for [Express](https://expressjs.com/en/advanced/security-updates.html) and [Node](https://nodejs.org/en/blog/vulnerability/).
+
+##### Updating Dependencies
+
+1. Check if dependies are out of date: `npm outdated --depth 0`
+1. Update package.json: `npm install -g npm-check-updates` (global install)
+1. Complete the update of package.json using `npm-check-updates` by executing `ncu -u`
+1. Finally install the updated packages `npm install`
+
+**`npm audit` compares the version numbers of the dependencies in an application to a list of the version numbers of dependencies containing known security threats in a centralized error database**
+
+`npm audit fix` can resolve suggested security fixes after executing `npm audit`.
+
+By default, `audit fix` does not update dependencies if their major version number has increased. Updating these dependencies could lead to the whole application breaking down.
+
+_Supply chain attacks_ possible in when instead of attacking an application directly, an attacker compromises one of the dependencies that most applications rely on, and the malicious code then gets pulled into every project that installs that dependency.
+
+#### Best Practices for Application Security
+
+1. Keep dependencies reasonably small - every package added is additional attack surface
+1. Git commit the package-lock.json file
+1. Use `npm ci` instead of `npm install` in Continous Integration or Production environments (so exact previously verified dependecny versions and integrity hashes are used)
+1. Run `npm audit` regularly
+    1. Use equivalent [Socket](https://socket.dev/) or [Snyk](https://snyk.io/) regularly, and let tools such as [Dependabot](https://docs.github.com/en/code-security/dependabot) or [Renovate](https://docs.renovatebot.com/) open pull requests automatically when new versions are released.
+1. Discern adding new dependencies.
+    1. Check maintanence activity, authenticity, and projects that depend on it
+1. Consider disabling the execution of install scripts for dependencies you don't fully trust, e.g. with `npm install --ignore-scripts`.
+1. Avoid installing a package version the moment it is published. The minimum release age for a package can be enforced in the `.npmrc` settings.
+1. Access control should be done both in the frontend and also on the backend.
+1. **Never trust data from the browser, e.g., URL parameters, HTTP headers, cookies, user uploaded file. Always sanitize and assume the worst.**
+1. Read [Mozila MDN's website security guide](https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps/Website_security)
+1. Install the [Helmet](https://helmetjs.github.io/) package for the backend which includes middleware that elimates some vulnerabilities in Express
+1. Read [Express's Production Best Practices](https://expressjs.com/en/advanced/best-practice-security.html)
+1. Install [ESlint security plugin](https://github.com/nodesecurity/eslint-plugin-security)
