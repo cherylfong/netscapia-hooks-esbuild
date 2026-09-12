@@ -9,7 +9,6 @@ const dummy = (blogs) => {
 // array of blogs as param
 // returns sum of likes in list of blogs
 const totalLikes = (blogs) => {
-
   return blogs.reduce((sum, b) => sum + (b.likes || 0), 0)
 }
 
@@ -18,7 +17,6 @@ const totalLikes = (blogs) => {
 // more than 1 blog will be returned
 // when there are more than 1 highest likes of the same value
 const favoriteBlog = (blogs) => {
-
   if (!blogs || blogs.length === 0 || blogs.length === 1) return blogs
 
   let maxLikes = -Infinity
@@ -67,7 +65,7 @@ const mostBlogs = (blogs) => {
   const top = lodash.maxBy(result, 'blogs')
 
   // check to see if there are coliding (more than one highest number of the same value)
-  const winners = result.filter(r => r.blogs === top.blogs)
+  const winners = result.filter((r) => r.blogs === top.blogs)
 
   return winners
 }
@@ -81,27 +79,27 @@ const mostBlogs = (blogs) => {
 //   likes: 17
 // }
 const mostLikes = (blogs) => {
-
   if (!blogs || blogs.length === 0) return [{}]
-  if (blogs.length === 1) return [{ author: blogs[0].author, likes: blogs[0].likes || 0 }]
+  if (blogs.length === 1)
+    return [{ author: blogs[0].author, likes: blogs[0].likes || 0 }]
 
   // group blogs by author in key-value (by the common "author-name": [{},{}])
   const grouped = lodash.groupBy(blogs, 'author')
 
   // compute total likes per author
   // get keys from grouped only e.g. "Rober C. Martin"
-  const totals = Object.keys(grouped).map(author => ({
+  const totals = Object.keys(grouped).map((author) => ({
     // author: "Robert C. Martin"
     author,
     // using the keys saved in author sum the liks
-    likes: lodash.sumBy(grouped[author], 'likes')
+    likes: lodash.sumBy(grouped[author], 'likes'),
   }))
 
   // return the author object with the highest likes
   const top = lodash.maxBy(totals, 'likes')
   if (!top) return [{}]
 
-  const winners = totals.filter(t => t.likes === top.likes)
+  const winners = totals.filter((t) => t.likes === top.likes)
   return winners
 }
 
@@ -110,5 +108,5 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
-  mostLikes
+  mostLikes,
 }

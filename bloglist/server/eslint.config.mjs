@@ -14,7 +14,7 @@ export default [
       ecmaVersion: 'latest',
     },
     plugins: {
-       '@stylistic': stylistic,
+      '@stylistic': stylistic,
     },
     rules: {
       '@stylistic/indent': ['error', 2],

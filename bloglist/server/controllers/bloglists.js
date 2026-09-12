@@ -5,13 +5,11 @@ const User = require('../models/user')
 
 const { userExtractor } = require('../utils/middleware')
 
-
 // Use relative path of the URL:
 // Since defined in app.js that any route which
 // begins with /api/blogs will use definitons in this module.
 
 bloglistRouter.get('/', async (request, response) => {
-
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   response.json(blogs)
 })
@@ -43,7 +41,7 @@ bloglistRouter.post('/', userExtractor, async (request, response) => {
     author: body.author,
     url: body.url,
     likes: body.likes || 0,
-    user: user._id
+    user: user._id,
   })
 
   const savedBlog = await blog.save()
@@ -55,7 +53,6 @@ bloglistRouter.post('/', userExtractor, async (request, response) => {
 
 bloglistRouter.delete('/:id', userExtractor, async (request, response) => {
   try {
-
     const blog = await Blog.findById(request.params.id)
     if (!blog) return response.status(404).end()
 
@@ -67,7 +64,11 @@ bloglistRouter.delete('/:id', userExtractor, async (request, response) => {
     if (userIDFromLogin !== userIDFromBlog) {
       const owner = await User.findById(blog.user)
       const ownerName = owner ? owner.username : 'unknown'
-      return response.status(401).json({ error: `Only original poster can delete posted blog - blog owner: ${ownerName}` })
+      return response
+        .status(401)
+        .json({
+          error: `Only original poster can delete posted blog - blog owner: ${ownerName}`,
+        })
     }
 
     await Blog.findByIdAndDelete(request.params.id)
@@ -78,11 +79,9 @@ bloglistRouter.delete('/:id', userExtractor, async (request, response) => {
 })
 
 bloglistRouter.put('/:id', userExtractor, async (request, response) => {
-
   let blog = await Blog.findById(request.params.id)
 
   if (!blog) {
-
     return response.status(404).end()
   }
 
@@ -107,14 +106,13 @@ bloglistRouter.put('/:id', userExtractor, async (request, response) => {
       (url !== undefined && url !== blog.url)
 
     if (!isOwner && changesOwnerField) {
-
       if (!request.token) {
         return response.status(401).json({
-          error: 'Login to change title, author, or url'
+          error: 'Login to change title, author, or url',
         })
       }
       return response.status(403).json({
-        error: 'Only the original poster can update title, author, or url'
+        error: 'Only the original poster can update title, author, or url',
       })
     }
 
@@ -122,7 +120,6 @@ bloglistRouter.put('/:id', userExtractor, async (request, response) => {
       blog.url = url ? url : blog.url
       blog.author = author ? author : blog.author
       blog.title = title ? title : blog.title
-
     }
   }
 
@@ -131,11 +128,8 @@ bloglistRouter.put('/:id', userExtractor, async (request, response) => {
     blog.likes = likes
   }
 
-
-
   const updatedBlog = await blog.save()
   return response.status(200).json(updatedBlog)
-
 })
 
 module.exports = bloglistRouter
