@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Typography, Container, Button, AppBar, Toolbar } from '@mui/material'
 
-
 import {
   Routes, Route, Link,
   useNavigate
@@ -20,6 +19,9 @@ import FilterBlogs from './components/FilterBlogs'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
+
+import { ErrorBoundary, getErrorMessage } from 'react-error-boundary'
+import SimulatedError from './components/SimulatedError'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -58,7 +60,7 @@ const App = () => {
 
         setNotify(
           {
-            text:`Blog item titled "${blogItemObject.title}" added`,
+            text: `Blog item titled "${blogItemObject.title}" added`,
             type: 'success'
           }
         )
@@ -69,14 +71,14 @@ const App = () => {
 
           setNotify(
             {
-              text:'Fill in all fields',
+              text: 'Fill in all fields',
               type: 'warning'
             }
           )
         } else {
           setNotify(
             {
-              text:`ERROR: status ${error.response.status}`,
+              text: `ERROR: status ${error.response.status}`,
               type: 'error'
             }
           )
@@ -100,7 +102,7 @@ const App = () => {
 
         setNotify(
           {
-            text:`Blog item titled "${blogObject.title}" updated with ${blogObject.likes} 👍`,
+            text: `Blog item titled "${blogObject.title}" updated with ${blogObject.likes} 👍`,
             type: 'success'
           }
         )
@@ -131,7 +133,7 @@ const App = () => {
 
         setNotify(
           {
-            text:'Blog item removed!',
+            text: 'Blog item removed!',
             type: 'success'
           }
         )
@@ -273,47 +275,56 @@ const App = () => {
             <>LOGIN</>
           )}</Button>
 
+          <Button color="inherit" component={Link} to="/simulated-error" sx={styleToolBar}>Simulated Error</Button>
+
         </Toolbar>
       </AppBar>
 
-      <Notify notify={notify}/>
+      <ErrorBoundary
+        fallbackRender={({ error, resetErrorBoundary }) => (
+          <div role="alert">
+            <p>Something went wrong :(</p>
+            <p>{getErrorMessage(error)}</p>
+            <br/>
+            <pre><b>Go to a new page on this website and then click the button.</b></pre>
+            <pre>Click the button below ⬇️ to reset the application.</pre>
+            <button onClick={resetErrorBoundary}>Click Me!</button>
+          </div>
+        )}
+        onError={(error, info) => {
+          // Log the error to your error reporting service
+          console.log('ERROR: ',error.message)
+          console.log('INFO:', info)
+        }}
+        onReset={() => {
+          // Reset any state that may have caused the error
+        }}
+      >
 
-      <Routes>
-        <Route path='/how-to-use' element={<Usage />} />
-        <Route path='/' element={
-          <FilterBlogs blogs={blogs} user={user} updateBlogLikes={updateBlogLikes} removeBlog={removeBlog} />} />
-        <Route path='/login' element={<LoginForm handleLogin={handleLogin} />} />
+        <Notify notify={notify} />
 
-        <Route path='/about' element={<About/>} />
+        <Routes>
+          <Route path='/how-to-use' element={<Usage />} />
+          <Route path='/' element={
+            <FilterBlogs blogs={blogs} user={user} updateBlogLikes={updateBlogLikes} removeBlog={removeBlog} />} />
+          <Route path='/login' element={<LoginForm handleLogin={handleLogin} />} />
 
-        <Route path='/add' element={<BlogForm createBlog={createBlog} />} />
+          <Route path='/about' element={<About />} />
 
-        {/* <Route path="/:id" element={
-          <Blog blog={blog}
-            loggedInUser={user?.username}
-            updateBlogLikes={updateBlogLikes}
-            removeBlog={removeBlog}/>
-        } /> */}
+          <Route path='/add' element={<BlogForm createBlog={createBlog} />} />
 
-        {/*NOTE TO SELF ^^^
-          *
-          * The above code for Route to the id of a blog item works.
-          * HOWEVER, when that page is refreshed,
-          * An error occurs with the value of blog as being undefined.
-          * The blog UseState is populated asynchronously.
-          * The refreshed page loses the passed-in blog prop until the client fetch finishes.
-          * The code below using BlogPage fetches a blog by id from the server when rendered.
-          */}
+          <Route path='/:id' element={
+            <BlogPage
+              blogs={blogs}
+              loggedInUser={user?.username}
+              updateBlogLikes={updateBlogLikes}
+              removeBlog={removeBlog}
+            />
+          } />
+          <Route path='/simulated-error' element={<SimulatedError />} />
+        </Routes>
 
-        <Route path='/:id' element={
-          <BlogPage
-            blogs={blogs}
-            loggedInUser={user?.username}
-            updateBlogLikes={updateBlogLikes}
-            removeBlog={removeBlog}
-          />
-        } />
-      </Routes>
+      </ErrorBoundary>
 
       <Footer>
         <div>
