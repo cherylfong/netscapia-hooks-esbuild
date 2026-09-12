@@ -776,6 +776,8 @@ npm install mongoose --prefix server  # add to the backend
 
 Alternatively, simply `cd` into the target directory and run `npm install` from there.
 
+**Recommendation: During migration of placing the server and client applications in one large project directory together, Do Not manually make a copy of the _`node_modules`_ directory. Instead go into `/client` or `/server` and run `npm install` there**.
+
 #### React Application Code Organization
 
 Common covention used by [Next.js](https://nextjs.org/docs/pages/building-your-application/routing) and is described in the [React FAQ on file structure](https://legacy.reactjs.org/docs/faq-structure.html):
