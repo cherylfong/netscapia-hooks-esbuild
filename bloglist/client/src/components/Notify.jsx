@@ -10,10 +10,7 @@ const Notify = ({ notify }) => {
   }
 
   return (
-
-    <Alert
-      style={{ marginTop: 10, marginBottom: 10 }}
-      severity={notify.type}>
+    <Alert style={{ marginTop: 10, marginBottom: 10 }} severity={notify.type}>
       {notify.text}
     </Alert>
   )

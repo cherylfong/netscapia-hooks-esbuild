@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Typography, Container, Button, AppBar, Toolbar } from '@mui/material'
 
-import {
-  Routes, Route, Link,
-  useNavigate
-} from 'react-router-dom'
+import { Routes, Route, Link, useNavigate } from 'react-router-dom'
 
 import About from './components/About'
 import Usage from './components/Usage'
@@ -35,15 +32,12 @@ const App = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
     if (loggedUserJSON) {
-
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
@@ -51,75 +45,58 @@ const App = () => {
   }, [])
 
   const createBlog = (blogItemObject) => {
-
     blogService
       .create(blogItemObject)
       .then(() => blogService.getAll())
-      .then(refreshedBlogs => {
+      .then((refreshedBlogs) => {
         console.log(refreshedBlogs)
 
         setBlogs(refreshedBlogs)
 
-        setNotify(
-          {
-            text: `Blog item titled "${blogItemObject.title}" added`,
-            type: 'success'
-          }
-        )
+        setNotify({
+          text: `Blog item titled "${blogItemObject.title}" added`,
+          type: 'success',
+        })
         resetNotification()
-      }).catch(error => {
-
+      })
+      .catch((error) => {
         if (error.response.status === 400) {
-
-          setNotify(
-            {
-              text: 'Fill in all fields',
-              type: 'warning'
-            }
-          )
+          setNotify({
+            text: 'Fill in all fields',
+            type: 'warning',
+          })
         } else {
-          setNotify(
-            {
-              text: `ERROR: status ${error.response.status}`,
-              type: 'error'
-            }
-          )
+          setNotify({
+            text: `ERROR: status ${error.response.status}`,
+            type: 'error',
+          })
         }
       })
       .finally(resetNotification)
-
-
   }
 
   const updateBlogLikes = (blogId, blogObject) => {
-
     blogService
       .update(blogId, blogObject)
       // update blogs with the new updated blog
       .then(() => blogService.getAll())
-      .then(refreshedBlogs => {
+      .then((refreshedBlogs) => {
         console.log(refreshedBlogs)
 
         setBlogs(refreshedBlogs)
 
-        setNotify(
-          {
-            text: `Blog item titled "${blogObject.title}" updated with ${blogObject.likes} 👍`,
-            type: 'success'
-          }
-        )
+        setNotify({
+          text: `Blog item titled "${blogObject.title}" updated with ${blogObject.likes} 👍`,
+          type: 'success',
+        })
       })
-      .catch(error => {
-
-        setNotify(
-          {
-            text: `ERROR: ${error.message}`,
-            type: 'error'
-          }
-        )
+      .catch((error) => {
+        setNotify({
+          text: `ERROR: ${error.message}`,
+          type: 'error',
+        })
       })
       .finally(resetNotification)
-
   }
 
   // only the logged-in users who is the original poster
@@ -128,35 +105,27 @@ const App = () => {
     return blogService
       .remove(blogId)
       .then(() => blogService.getAll())
-      .then(refreshedBlogs => {
+      .then((refreshedBlogs) => {
         console.log('REMOVED: ', refreshedBlogs)
 
         setBlogs(refreshedBlogs)
 
-        setNotify(
-          {
-            text: 'Blog item removed!',
-            type: 'success'
-          }
-        )
-      }).catch(error => {
-
-        setNotify(
-          {
-            text: `ERROR: ${error.message}`,
-            type: 'error'
-          }
-        )
+        setNotify({
+          text: 'Blog item removed!',
+          type: 'success',
+        })
+      })
+      .catch((error) => {
+        setNotify({
+          text: `ERROR: ${error.message}`,
+          type: 'error',
+        })
       })
       .finally(resetNotification)
-
   }
 
   const handleLogin = async (username, password, setUsername, setPassword) => {
-
-
     try {
-
       if (password === '' || username === '') {
         throw new Error('Please enter both username and password')
       }
@@ -164,9 +133,7 @@ const App = () => {
       const user = await loginService.login({ username, password })
 
       // save user's logged in username to browser key-value database
-      window.localStorage.setItem(
-        'loggedNoteappUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
 
@@ -176,49 +143,35 @@ const App = () => {
       setPassword('')
       navigate('/')
 
-      setNotify(
-        {
-          text: `🎊 Welcome back ${username}!`,
-          type: 'info'
-        }
-      )
-
+      setNotify({
+        text: `🎊 Welcome back ${username}!`,
+        type: 'info',
+      })
     } catch (error) {
-
       if (error.message.includes(401)) {
-
-        setNotify(
-          {
-            text: 'Invalid credentials! 🔐 Try again 😀',
-            type: 'error'
-          }
-        )
-
+        setNotify({
+          text: 'Invalid credentials! 🔐 Try again 😀',
+          type: 'error',
+        })
       } else {
-
-        setNotify(
-          {
-            text: `${error.message}`,
-            type: 'error'
-          }
-        )
+        setNotify({
+          text: `${error.message}`,
+          type: 'error',
+        })
       }
-
     } finally {
       resetNotification()
     }
   }
 
-
   const handleLogOff = () => {
     window.localStorage.clear()
     setUser(null)
     navigate('/')
-    setNotify(
-      {
-        text: 'Log off successful!',
-        type: 'success'
-      })
+    setNotify({
+      text: 'Log off successful!',
+      type: 'success',
+    })
     resetNotification()
   }
 
@@ -230,7 +183,7 @@ const App = () => {
 
   const linkPadding = {
     padding: 5,
-    color: 'purple'
+    color: 'purple',
   }
 
   const styleAppBar = { bgcolor: 'rgba(231, 75, 41, 0.6)' }
@@ -239,14 +192,13 @@ const App = () => {
 
   return (
     <Container>
-
       <AppBar position="static" sx={styleAppBar}>
         <Toolbar>
-
           <Typography
             variant="h6"
             noWrap
-            component={Link} to="/about"
+            component={Link}
+            to="/about"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -255,30 +207,71 @@ const App = () => {
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
-              flexGrow: 1
+              flexGrow: 1,
             }}
           >
             BLOGLIST
           </Typography>
 
-          <Button color="inherit" component={Link} to="/how-to-use" sx={styleToolBar}>USAGE GUIDE</Button>
+          <Button
+            color="inherit"
+            component={Link}
+            to="/how-to-use"
+            sx={styleToolBar}
+          >
+            USAGE GUIDE
+          </Button>
 
-          <Button color="inherit" component={Link} to="/" sx={styleToolBar}>BLOGS</Button>
+          <Button color="inherit" component={Link} to="/" sx={styleToolBar}>
+            BLOGS
+          </Button>
 
-          {user && <Button color="inherit" component={Link} to="/add" sx={styleToolBar}>ADD</Button>}
-
-          {user && (<Button color="inherit" component={Link} to="/" onClick={handleLogOff} sx={styleToolBar}>Logout</Button>
+          {user && (
+            <Button
+              color="inherit"
+              component={Link}
+              to="/add"
+              sx={styleToolBar}
+            >
+              ADD
+            </Button>
           )}
 
           {user && (
-            <span style={linkPadding} to=''>| {user.name ?? user.username} is logged in.</span>
+            <Button
+              color="inherit"
+              component={Link}
+              to="/"
+              onClick={handleLogOff}
+              sx={styleToolBar}
+            >
+              Logout
+            </Button>
           )}
-          <Button color="inherit" component={Link} to="/login" sx={styleToolBar}> {!user && (
-            <>LOGIN</>
-          )}</Button>
 
-          <Button color="inherit" component={Link} to="/simulated-error" sx={styleToolBar}>Simulated Error</Button>
+          {user && (
+            <span style={linkPadding} to="">
+              | {user.name ?? user.username} is logged in.
+            </span>
+          )}
+          <Button
+            color="inherit"
+            component={Link}
+            to="/login"
+            sx={styleToolBar}
+          >
+            {' '}
+            {!user && <>LOGIN</>}
+          </Button>
 
+          <Button
+            color="inherit"
+            component={Link}
+            to="/simulated-error"
+            sx={styleToolBar}
+          >
+            Simulated Error
+          </Button>
         </Toolbar>
       </AppBar>
 
@@ -287,46 +280,61 @@ const App = () => {
           <div role="alert">
             <p>Something went wrong :(</p>
             <p>{getErrorMessage(error)}</p>
-            <br/>
-            <pre><b>Go to a new page on this website and then click the button.</b></pre>
+            <br />
+            <pre>
+              <b>Go to a new page on this website and then click the button.</b>
+            </pre>
             <pre>Click the button below ⬇️ to reset the application.</pre>
             <button onClick={resetErrorBoundary}>Click Me!</button>
           </div>
         )}
         onError={(error, info) => {
           // Log the error to your error reporting service
-          console.log('ERROR: ',error.message)
+          console.log('ERROR: ', error.message)
           console.log('INFO:', info)
         }}
         onReset={() => {
           // Reset any state that may have caused the error
         }}
       >
-
         <Notify notify={notify} />
 
         <Routes>
-          <Route path='/how-to-use' element={<Usage />} />
-          <Route path='/' element={
-            <FilterBlogs blogs={blogs} user={user} updateBlogLikes={updateBlogLikes} removeBlog={removeBlog} />} />
-          <Route path='/login' element={<LoginForm handleLogin={handleLogin} />} />
+          <Route path="/how-to-use" element={<Usage />} />
+          <Route
+            path="/"
+            element={
+              <FilterBlogs
+                blogs={blogs}
+                user={user}
+                updateBlogLikes={updateBlogLikes}
+                removeBlog={removeBlog}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={<LoginForm handleLogin={handleLogin} />}
+          />
 
-          <Route path='/about' element={<About />} />
+          <Route path="/about" element={<About />} />
 
-          <Route path='/add' element={<BlogForm createBlog={createBlog} />} />
+          <Route path="/add" element={<BlogForm createBlog={createBlog} />} />
 
-          <Route path='/:id' element={
-            <BlogPage
-              blogs={blogs}
-              loggedInUser={user?.username}
-              updateBlogLikes={updateBlogLikes}
-              removeBlog={removeBlog}
-            />
-          } />
-          <Route path='/simulated-error' element={<SimulatedError />} />
-          <Route path='*' element={ <PageNotFound /> }  />
+          <Route
+            path="/:id"
+            element={
+              <BlogPage
+                blogs={blogs}
+                loggedInUser={user?.username}
+                updateBlogLikes={updateBlogLikes}
+                removeBlog={removeBlog}
+              />
+            }
+          />
+          <Route path="/simulated-error" element={<SimulatedError />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
-
       </ErrorBoundary>
 
       <Footer>

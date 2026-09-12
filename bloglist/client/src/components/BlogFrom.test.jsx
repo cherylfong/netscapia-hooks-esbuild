@@ -3,9 +3,7 @@ import userEvent from '@testing-library/user-event'
 import BlogForm from './BlogForm'
 
 describe('<BlogForm />', () => {
-
   test('event handler receives correct prop objects when new blog is created', async () => {
-
     const createBlog = vi.fn()
 
     const user = userEvent.setup()
@@ -32,14 +30,11 @@ describe('<BlogForm />', () => {
     //   url: 'http://testing url'
     // })
 
-
     // mock.calls[0] retrieves the first call.
     // [0] retrieves its first argument.
     // .title retrieves the submitted title.
     expect(createBlog.mock.calls[0][0].title).toBe('testing title')
     expect(createBlog.mock.calls[0][0].author).toBe('testing author')
     expect(createBlog.mock.calls[0][0].url).toBe('http://testing url')
-
   })
-
 })

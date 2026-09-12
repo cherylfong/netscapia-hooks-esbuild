@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { TextField, Button } from '@mui/material'
 
 const BlogForm = ({ createBlog }) => {
-
   const [newBlogTitle, setBlogTitle] = useState('')
   const [newBlogAuthor, setBlogAuthor] = useState('')
   const [newBlogUrl, setBlogUrl] = useState('http://')
@@ -11,13 +10,12 @@ const BlogForm = ({ createBlog }) => {
   const navigate = useNavigate()
 
   const addBlog = (event) => {
-
     event.preventDefault()
 
     createBlog({
       title: newBlogTitle,
       author: newBlogAuthor,
-      url: newBlogUrl
+      url: newBlogUrl,
     })
 
     setBlogTitle('')
@@ -26,18 +24,16 @@ const BlogForm = ({ createBlog }) => {
     navigate('/')
   }
 
-
   return (
     <form onSubmit={addBlog}>
-      <div >
-
+      <div>
         <TextField
           required
           id="outlined-required"
           label="title"
           placeholder="What's the name of the blog?"
           value={newBlogTitle}
-          onChange={event => setBlogTitle(event.target.value)}
+          onChange={(event) => setBlogTitle(event.target.value)}
           style={{ marginTop: 10 }}
         />
       </div>
@@ -46,9 +42,9 @@ const BlogForm = ({ createBlog }) => {
           required
           id="outlined-required"
           label="author"
-          placeholder='Who wrote the blog?'
+          placeholder="Who wrote the blog?"
           value={newBlogAuthor}
-          onChange={event => setBlogAuthor(event.target.value)}
+          onChange={(event) => setBlogAuthor(event.target.value)}
           style={{ marginTop: 10 }}
         />
       </div>
@@ -58,11 +54,11 @@ const BlogForm = ({ createBlog }) => {
           id="outlined-required"
           label="url"
           value={newBlogUrl}
-          onChange={event => setBlogUrl(event.target.value)}
+          onChange={(event) => setBlogUrl(event.target.value)}
           style={{ marginTop: 10 }}
         />
       </div>
-      <Button type="submit" variant='contained' style={{ marginTop: 10 }}>
+      <Button type="submit" variant="contained" style={{ marginTop: 10 }}>
         save
       </Button>
     </form>

@@ -7,4 +7,3 @@ const Footer = styled.div`
 `
 
 export default Footer
-

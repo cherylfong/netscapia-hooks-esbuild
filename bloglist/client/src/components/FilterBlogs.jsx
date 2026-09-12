@@ -18,23 +18,23 @@ const FilterBlogs = ({ blogs, user, updateBlogLikes, removeBlog }) => {
 
   return (
     <>
-      <p style={{ fontSize: 'small' }}>**All users including unauthenticated users can <b>like</b> blog items.</p>
+      <p style={{ fontSize: 'small' }}>
+        **All users including unauthenticated users can <b>like</b> blog items.
+      </p>
 
       <div>
         <button onClick={() => setSortOrder('earliest')}>
           Sort by Earliest Add First
         </button>
 
-        <button onClick={() => setSortOrder('most')}>
-          Sort by Most Likes
-        </button>
+        <button onClick={() => setSortOrder('most')}>Sort by Most Likes</button>
 
         <button onClick={() => setSortOrder('least')}>
           Sort by Least Likes
         </button>
       </div>
 
-      <div id='blog-stack'>
+      <div id="blog-stack">
         {sortedBlogs.map((blog, idx) => (
           <Blog
             counter={idx + 1}
