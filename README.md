@@ -761,7 +761,7 @@ The root `package.json` is responsible for launching the frontend and backend to
 }
 ```
 
-[`concurrently`](https://github.com/open-cli-tools/concurrently) in the `dev` script above:
+[`concurrently`](https://github.com/open-cli-tools/concurrently) in the `dev` script above can be installed via `npm i -D concurrently`
 
 A small utility that runs multiple commands at the same time and merges their output into a single terminal stream. Without it you would have to open two separate terminals, one for the backend and one for the frontend.
 
