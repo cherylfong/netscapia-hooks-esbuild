@@ -879,3 +879,81 @@ _Supply chain attacks_ possible in when instead of attacking an application dire
 1. Install the [Helmet](https://helmetjs.github.io/) package for the backend which includes middleware that elimates some vulnerabilities in Express
 1. Read [Express's Production Best Practices](https://expressjs.com/en/advanced/best-practice-security.html)
 1. Install [ESlint security plugin](https://github.com/nodesecurity/eslint-plugin-security)
+
+### Prettier Code Formatter
+
+1. Install via `npm install --save-dev --save-exact prettier@3.9.6`
+1. Create config file `node --eval "fs.writeFileSync('.prettierrc','{}\n')"`
+1. Tell prettier which files to ignore `node --eval "fs.writeFileSync('.prettierignore','# Ignore artifacts:\nbuild\ncoverage\n')"`
+
+#### Prettier Usage
+
+1. To apply formating `npx prettier . --write`
+1. To only check formating `npx prettier . --check`
+
+#### VSCode Integration
+
+1. Install VSCode Plugin: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
+
+1. Usage: <keyboard>ALT</keyboard> + <keyboard>SHIFT</keyboard> + <keyboard>P</keyboard> : Keybindings can be changed.
+
+1. **Allow Format on save**
+
+First go to user settings for VS Code. Then search `editor.formatOnSave`.
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+
+Check the box for `Editor: Format On Save`.
+
+##### Prettier Formating Specifics
+
+1. To not add `;` semicolons to the end of javascript code instructions define the following settings in `.prettierrc`
+
+```json
+{
+  "semi": false
+}
+```
+1. To use single qoutes for Javascript and double qoutes for JSX attributes:
+
+```json
+{
+  "singleQuote": true,
+  "jsxSingleQuote": false
+}
+```
+
+##### Using Code Actions on Save
+
+VS Code's `editor.codeActionsOnSave` can run Prettier before other formatters like ESLint. This is useful when when to format with Prettier first and then apply ESLint fixes.
+
+```json
+// .vscode/settings.json
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.prettier": "explicit",
+  },
+}
+
+You can also combine Prettier with ESLint:
+
+// .vscode/settings.json
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.prettier": "explicit",
+    "source.fixAll.eslint": "explicit",
+  },
+}
+```
