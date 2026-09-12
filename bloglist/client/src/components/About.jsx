@@ -26,6 +26,7 @@ const card = (
       </Typography>
 
       <Typography variant="body2">
+        {bull}
         The Bloglist application is built with Node.js and React.
 
       </Typography>
