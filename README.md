@@ -681,7 +681,9 @@ The two key lifecycle methods are:
 
 Because this is the one remaining use case for Class components, many projects use the [react-error-boundary](https://github.com/bvaughn/react-error-boundary) library, which wraps the class-based machinery behind a convenient Functional component API.
 
-**Don't never have to write a Class component for error boundary manually.**
+Install with `npm install react-error-boundary`.
+
+**It is not necessary to write a Class component for error boundary manually.**
 
 #### Frontend and Backend in the same Repository
 
