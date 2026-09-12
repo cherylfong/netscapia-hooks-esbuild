@@ -23,6 +23,8 @@ import loginService from './services/login'
 import { ErrorBoundary, getErrorMessage } from 'react-error-boundary'
 import SimulatedError from './components/SimulatedError'
 
+import PageNotFound from './components/PageNotFound'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
 
@@ -322,6 +324,7 @@ const App = () => {
             />
           } />
           <Route path='/simulated-error' element={<SimulatedError />} />
+          <Route path='*' element={ <PageNotFound /> }  />
         </Routes>
 
       </ErrorBoundary>

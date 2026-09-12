@@ -8,12 +8,20 @@ export default function BlogPage({ blogs, loggedInUser, updateBlogLikes, removeB
   const { id } = useParams()
   const navigate = useNavigate()
   const [blog, setBlog] = useState(() => blogs.find(b => b.id === id) || null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!blog) {
-      blogService.get(id).then(fetched => setBlog(fetched)).catch(() => setBlog(null))
+      blogService.get(id).then(fetched => setBlog(fetched))
+        .catch(error => {
+          if (error.response?.status === 400) {
+            navigate('404', { replace: true })
+            setBlog(null)
+          }
+        })
+        .finally(() => setLoading(false))
     }
-  }, [id, blog])
+  }, [id, blog, navigate])
 
   // re-sync when parent `blogs` prop updates (e.g., after likes update)
   useEffect(() => {
@@ -32,6 +40,7 @@ export default function BlogPage({ blogs, loggedInUser, updateBlogLikes, removeB
     }
   }
 
-  if (!blog) return <div>Loading...</div>
+  if (loading) return <div>Loading...</div>
+  if (!blog) return null
   return <Blog blog={blog} loggedInUser={loggedInUser} updateBlogLikes={updateBlogLikes} removeBlog={handleRemove} startCollapsed={false} />
 }
