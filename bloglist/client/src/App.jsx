@@ -24,8 +24,17 @@ import PageNotFound from './components/PageNotFound'
 
 import { useNotificationActions } from './stores/notificationStore'
 
+import { useBlogs } from './hooks/useBlogs'
+
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  // const [blogs, setBlogs] = useState([])
+
+  const {
+    blogs,
+    addBlog: createBlog,
+    updateBlogLikes,
+    deleteBlog: removeBlog,
+  } = useBlogs()
 
   const [user, setUser] = useState(null)
 
@@ -33,9 +42,9 @@ const App = () => {
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
+  // useEffect(() => {
+  //   blogService.getAll().then((blogs) => setBlogs(blogs))
+  // }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
@@ -45,68 +54,6 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
-  const createBlog = (blogItemObject) => {
-    blogService
-      .create(blogItemObject)
-      .then(() => blogService.getAll())
-      .then((refreshedBlogs) => {
-        console.log(refreshedBlogs)
-
-        setBlogs(refreshedBlogs)
-
-        setNotification(
-          `Blog item titled "${blogItemObject.title}" added`,
-          5,
-          'success',
-        )
-      })
-      .catch((error) => {
-        if (error.response.status === 400) {
-          setNotification('Fill in all fields', 5, 'warning')
-        } else {
-          setNotification(`ERROR: status ${error.response.status}`, 5, 'error')
-        }
-      })
-  }
-
-  const updateBlogLikes = (blogId, blogObject) => {
-    blogService
-      .update(blogId, blogObject)
-      // update blogs with the new updated blog
-      .then(() => blogService.getAll())
-      .then((refreshedBlogs) => {
-        console.log(refreshedBlogs)
-
-        setBlogs(refreshedBlogs)
-
-        setNotification(
-          `Blog item titled "${blogObject.title}" updated with ${blogObject.likes} 👍`,
-          5,
-          'success',
-        )
-      })
-      .catch((error) => {
-        setNotification(`ERROR: ${error.message}`, 5, 'error')
-      })
-  }
-
-  // only the logged-in users who is the original poster
-  // (the user who added it) can delete the blog item
-  const removeBlog = (blogId) => {
-    return blogService
-      .remove(blogId)
-      .then(() => blogService.getAll())
-      .then((refreshedBlogs) => {
-        console.log('REMOVED: ', refreshedBlogs)
-
-        setBlogs(refreshedBlogs)
-        setNotification('Blog item removed!', 5, 'success')
-      })
-      .catch((error) => {
-        setNotification(`ERROR: ${error.message}`, 5, 'error')
-      })
-  }
 
   const handleLogin = async (username, password, setUsername, setPassword) => {
     try {
