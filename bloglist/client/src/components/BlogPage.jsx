@@ -27,6 +27,8 @@ export default function BlogPage({
           }
         })
         .finally(() => setLoading(false))
+    } else {
+      setLoading(false)
     }
   }, [id, blog, navigate])
 
