@@ -24,7 +24,7 @@ const FilterBlogs = ({ blogs, user, updateBlogLikes, removeBlog }) => {
 
       <div>
         <button onClick={() => setSortOrder('earliest')}>
-          Sort by Earliest Add First
+          Sort by Earliest Added
         </button>
 
         <button onClick={() => setSortOrder('most')}>Sort by Most Likes</button>
