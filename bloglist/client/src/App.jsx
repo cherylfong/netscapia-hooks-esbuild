@@ -254,15 +254,15 @@ const App = () => {
               | {user.name ?? user.username} is logged in.
             </span>
           )}
-          <Button
+
+          {!user && <Button
             color="inherit"
             component={Link}
             to="/login"
             sx={styleToolBar}
           >
-            {' '}
-            {!user && <>LOGIN</>}
-          </Button>
+            LOGIN
+          </Button>}
 
           <Button
             color="inherit"
