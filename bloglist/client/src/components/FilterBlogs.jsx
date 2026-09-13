@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Blog from './Blog'
 
-const FilterBlogs = ({ blogs, user, updateBlogLikes, removeBlog }) => {
+const FilterBlogs = ({ blogs, updateBlogLikes, removeBlog }) => {
   const [sortOrder, setSortOrder] = useState('earliest')
 
   const sortedBlogs = [...blogs].sort((firstBlog, secondBlog) => {
@@ -40,7 +40,6 @@ const FilterBlogs = ({ blogs, user, updateBlogLikes, removeBlog }) => {
             counter={idx + 1}
             key={blog.id}
             blog={blog}
-            loggedInUser={user?.username}
             updateBlogLikes={updateBlogLikes}
             removeBlog={removeBlog}
           />

@@ -1,16 +1,21 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import Button from '@mui/material/Button'
 
+import UserContext from '../UserContext'
+
 const Blog = ({
   blog,
-  loggedInUser,
+
   updateBlogLikes,
   removeBlog,
   counter,
   startCollapsed = true,
 }) => {
   const [view, setView] = useState(startCollapsed)
+
+  const { user } = useContext(UserContext)
+  const loggedInUser = user.username
 
   const toggleView = () => {
     setView((viewable) => !viewable)

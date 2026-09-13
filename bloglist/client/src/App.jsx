@@ -26,9 +26,10 @@ import { useNotificationActions } from './stores/notificationStore'
 
 import { useBlogs } from './hooks/useBlogs'
 
-const App = () => {
-  // const [blogs, setBlogs] = useState([])
+import { useContext } from 'react'
+import UserContext from './UserContext'
 
+const App = () => {
   const {
     blogs,
     addBlog: createBlog,
@@ -36,15 +37,13 @@ const App = () => {
     deleteBlog: removeBlog,
   } = useBlogs()
 
-  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState(null)
+
+  const { user, setUser } = useContext(UserContext)
 
   const setNotification = useNotificationActions()
 
   const navigate = useNavigate()
-
-  // useEffect(() => {
-  //   blogService.getAll().then((blogs) => setBlogs(blogs))
-  // }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
@@ -53,7 +52,7 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [setUser])
 
   const handleLogin = async (username, password, setUsername, setPassword) => {
     try {
@@ -201,8 +200,8 @@ const App = () => {
         )}
         onError={(error, info) => {
           // Log the error to your error reporting service
-          console.log('ERROR: ', error.message)
-          console.log('INFO:', info)
+          // console.log('ERROR: ', error.message)
+          // console.log('INFO:', info)
         }}
         onReset={() => {
           // Reset any state that may have caused the error
@@ -217,7 +216,6 @@ const App = () => {
             element={
               <FilterBlogs
                 blogs={blogs}
-                user={user}
                 updateBlogLikes={updateBlogLikes}
                 removeBlog={removeBlog}
               />
@@ -237,7 +235,6 @@ const App = () => {
             element={
               <BlogPage
                 blogs={blogs}
-                loggedInUser={user?.username}
                 updateBlogLikes={updateBlogLikes}
                 removeBlog={removeBlog}
               />

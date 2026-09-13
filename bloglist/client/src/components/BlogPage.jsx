@@ -6,7 +6,6 @@ import Blog from './Blog'
 
 export default function BlogPage({
   blogs,
-  loggedInUser,
   updateBlogLikes,
   removeBlog,
 }) {
@@ -54,7 +53,6 @@ export default function BlogPage({
   return (
     <Blog
       blog={blog}
-      loggedInUser={loggedInUser}
       updateBlogLikes={updateBlogLikes}
       removeBlog={handleRemove}
       startCollapsed={false}
