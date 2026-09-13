@@ -38,7 +38,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
@@ -117,7 +117,7 @@ const App = () => {
       const user = await loginService.login({ username, password })
 
       // save user's logged in username to browser key-value database
-      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
+      window.localStorage.setItem('loggedBlogUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
 
