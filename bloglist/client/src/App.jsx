@@ -31,6 +31,8 @@ import UserContext from './UserContext'
 
 import persistentUserService from './services/persistentUser'
 
+import UserTable from './components/UserTable'
+
 const App = () => {
   const {
     blogs,
@@ -46,7 +48,6 @@ const App = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-
     const loggedUserJSON = persistentUserService.getUser()
 
     if (loggedUserJSON) {
@@ -83,7 +84,6 @@ const App = () => {
   }
 
   const handleLogOff = () => {
-
     persistentUserService.removeUser()
     setUser(null)
     navigate('/')
@@ -178,6 +178,15 @@ const App = () => {
           <Button
             color="inherit"
             component={Link}
+            to="/users"
+            sx={styleToolBar}
+          >
+            Users
+          </Button>
+
+          <Button
+            color="inherit"
+            component={Link}
             to="/simulated-error"
             sx={styleToolBar}
           >
@@ -241,6 +250,9 @@ const App = () => {
               />
             }
           />
+          <Route path="/users" element={<UserTable />} />
+          {/* <Route path="/users/:id" element={<UserDetails />} /> */}
+
           <Route path="/simulated-error" element={<SimulatedError />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
