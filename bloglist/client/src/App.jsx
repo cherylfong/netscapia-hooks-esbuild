@@ -22,12 +22,14 @@ import SimulatedError from './components/SimulatedError'
 
 import PageNotFound from './components/PageNotFound'
 
+import { useNotificationActions } from './stores/notificationStore'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
 
   const [user, setUser] = useState(null)
 
-  const [notify, setNotify] = useState(null)
+  const setNotification = useNotificationActions()
 
   const navigate = useNavigate()
 
@@ -53,26 +55,19 @@ const App = () => {
 
         setBlogs(refreshedBlogs)
 
-        setNotify({
-          text: `Blog item titled "${blogItemObject.title}" added`,
-          type: 'success',
-        })
-        resetNotification()
+        setNotification(
+          `Blog item titled "${blogItemObject.title}" added`,
+          5,
+          'success',
+        )
       })
       .catch((error) => {
         if (error.response.status === 400) {
-          setNotify({
-            text: 'Fill in all fields',
-            type: 'warning',
-          })
+          setNotification('Fill in all fields', 5, 'warning')
         } else {
-          setNotify({
-            text: `ERROR: status ${error.response.status}`,
-            type: 'error',
-          })
+          setNotification(`ERROR: status ${error.response.status}`, 5, 'error')
         }
       })
-      .finally(resetNotification)
   }
 
   const updateBlogLikes = (blogId, blogObject) => {
@@ -85,18 +80,15 @@ const App = () => {
 
         setBlogs(refreshedBlogs)
 
-        setNotify({
-          text: `Blog item titled "${blogObject.title}" updated with ${blogObject.likes} 👍`,
-          type: 'success',
-        })
+        setNotification(
+          `Blog item titled "${blogObject.title}" updated with ${blogObject.likes} 👍`,
+          5,
+          'success',
+        )
       })
       .catch((error) => {
-        setNotify({
-          text: `ERROR: ${error.message}`,
-          type: 'error',
-        })
+        setNotification(`ERROR: ${error.message}`, 5, 'error')
       })
-      .finally(resetNotification)
   }
 
   // only the logged-in users who is the original poster
@@ -109,19 +101,11 @@ const App = () => {
         console.log('REMOVED: ', refreshedBlogs)
 
         setBlogs(refreshedBlogs)
-
-        setNotify({
-          text: 'Blog item removed!',
-          type: 'success',
-        })
+        setNotification('Blog item removed!', 5, 'success')
       })
       .catch((error) => {
-        setNotify({
-          text: `ERROR: ${error.message}`,
-          type: 'error',
-        })
+        setNotification(`ERROR: ${error.message}`, 5, 'error')
       })
-      .finally(resetNotification)
   }
 
   const handleLogin = async (username, password, setUsername, setPassword) => {
@@ -142,25 +126,13 @@ const App = () => {
       setUsername('')
       setPassword('')
       navigate('/')
-
-      setNotify({
-        text: `🎊 Welcome back ${username}!`,
-        type: 'info',
-      })
+      setNotification(`🎊 Welcome back ${username}!`, 5, 'info')
     } catch (error) {
       if (error.message.includes(401)) {
-        setNotify({
-          text: 'Invalid credentials! 🔐 Try again 😀',
-          type: 'error',
-        })
+        setNotification('Invalid credentials! 🔐 Try again 😀', 5, 'error')
       } else {
-        setNotify({
-          text: `${error.message}`,
-          type: 'error',
-        })
+        setNotification(`${error.message}`, 5, 'error')
       }
-    } finally {
-      resetNotification()
     }
   }
 
@@ -168,17 +140,7 @@ const App = () => {
     window.localStorage.clear()
     setUser(null)
     navigate('/')
-    setNotify({
-      text: 'Log off successful!',
-      type: 'success',
-    })
-    resetNotification()
-  }
-
-  const resetNotification = async () => {
-    await setTimeout(() => {
-      setNotify(null)
-    }, 5000)
+    setNotification('Log off successful!', 5, 'success')
   }
 
   const linkPadding = {
@@ -255,14 +217,16 @@ const App = () => {
             </span>
           )}
 
-          {!user && <Button
-            color="inherit"
-            component={Link}
-            to="/login"
-            sx={styleToolBar}
-          >
-            LOGIN
-          </Button>}
+          {!user && (
+            <Button
+              color="inherit"
+              component={Link}
+              to="/login"
+              sx={styleToolBar}
+            >
+              LOGIN
+            </Button>
+          )}
 
           <Button
             color="inherit"
@@ -297,7 +261,7 @@ const App = () => {
           // Reset any state that may have caused the error
         }}
       >
-        <Notify notify={notify} />
+        <Notify />
 
         <Routes>
           <Route path="/how-to-use" element={<Usage />} />
