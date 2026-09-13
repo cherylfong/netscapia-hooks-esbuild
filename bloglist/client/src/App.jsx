@@ -32,6 +32,7 @@ import UserContext from './UserContext'
 import persistentUserService from './services/persistentUser'
 
 import UserTable from './components/UserTable'
+import UserDetails from './components/UserDetails'
 
 const App = () => {
   const {
@@ -251,7 +252,8 @@ const App = () => {
             }
           />
           <Route path="/users" element={<UserTable />} />
-          {/* <Route path="/users/:id" element={<UserDetails />} /> */}
+
+          <Route path="/users/:id" element={<UserDetails />} />
 
           <Route path="/simulated-error" element={<SimulatedError />} />
           <Route path="*" element={<PageNotFound />} />
