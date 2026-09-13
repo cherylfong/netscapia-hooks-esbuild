@@ -15,7 +15,12 @@ const Blog = ({
   const [view, setView] = useState(startCollapsed)
 
   const { user } = useContext(UserContext)
-  const loggedInUser = user.username
+
+  let loggedInUser = null
+
+  if (user) {
+    loggedInUser = user.username
+  }
 
   const toggleView = () => {
     setView((viewable) => !viewable)

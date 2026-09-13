@@ -1,11 +1,16 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TextField, Button } from '@mui/material'
 
+import useField from '../hooks/useField'
+
 const BlogForm = ({ createBlog }) => {
-  const [newBlogTitle, setBlogTitle] = useState('')
-  const [newBlogAuthor, setBlogAuthor] = useState('')
-  const [newBlogUrl, setBlogUrl] = useState('http://')
+  // const [newBlogTitle, setBlogTitle] = useState('')
+  // const [newBlogAuthor, setBlogAuthor] = useState('')
+  // const [newBlogUrl, setBlogUrl] = useState('http://')
+
+  const newBlogTitle = useField('outlined-required', 'title', 'text', '')
+  const newBlogAuthor = useField('outlined-required', 'author', 'text', '')
+  const newBlogUrl = useField('outlined-required', 'url', 'text', 'http://')
 
   const navigate = useNavigate()
 
@@ -13,14 +18,11 @@ const BlogForm = ({ createBlog }) => {
     event.preventDefault()
 
     createBlog({
-      title: newBlogTitle,
-      author: newBlogAuthor,
-      url: newBlogUrl,
+      title: newBlogTitle.value,
+      author: newBlogAuthor.value,
+      url: newBlogUrl.value,
     })
 
-    setBlogTitle('')
-    setBlogAuthor('')
-    setBlogUrl('http://')
     navigate('/')
   }
 
@@ -29,32 +31,23 @@ const BlogForm = ({ createBlog }) => {
       <div>
         <TextField
           required
-          id="outlined-required"
-          label="title"
+          {...newBlogTitle}
           placeholder="What's the name of the blog?"
-          value={newBlogTitle}
-          onChange={(event) => setBlogTitle(event.target.value)}
           style={{ marginTop: 10 }}
         />
       </div>
       <div>
         <TextField
           required
-          id="outlined-required"
-          label="author"
+          {...newBlogAuthor}
           placeholder="Who wrote the blog?"
-          value={newBlogAuthor}
-          onChange={(event) => setBlogAuthor(event.target.value)}
           style={{ marginTop: 10 }}
         />
       </div>
       <div>
         <TextField
           required
-          id="outlined-required"
-          label="url"
-          value={newBlogUrl}
-          onChange={(event) => setBlogUrl(event.target.value)}
+          {...newBlogUrl}
           style={{ marginTop: 10 }}
         />
       </div>

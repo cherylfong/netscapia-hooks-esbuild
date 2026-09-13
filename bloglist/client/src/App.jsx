@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Typography, Container, Button, AppBar, Toolbar } from '@mui/material'
 
 import { Routes, Route, Link, useNavigate } from 'react-router-dom'
@@ -29,6 +29,8 @@ import { useBlogs } from './hooks/useBlogs'
 import { useContext } from 'react'
 import UserContext from './UserContext'
 
+import persistentUserService from './services/persistentUser'
+
 const App = () => {
   const {
     blogs,
@@ -37,8 +39,6 @@ const App = () => {
     deleteBlog: removeBlog,
   } = useBlogs()
 
-  // const [user, setUser] = useState(null)
-
   const { user, setUser } = useContext(UserContext)
 
   const setNotification = useNotificationActions()
@@ -46,7 +46,9 @@ const App = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
+
+    const loggedUserJSON = persistentUserService.getUser()
+
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
@@ -54,7 +56,7 @@ const App = () => {
     }
   }, [setUser])
 
-  const handleLogin = async (username, password, setUsername, setPassword) => {
+  const handleLogin = async (username, password) => {
     try {
       if (password === '' || username === '') {
         throw new Error('Please enter both username and password')
@@ -62,16 +64,14 @@ const App = () => {
 
       const user = await loginService.login({ username, password })
 
-      // save user's logged in username to browser key-value database
-      window.localStorage.setItem('loggedBlogUser', JSON.stringify(user))
+      persistentUserService.saveUser(user)
 
       blogService.setToken(user.token)
 
       setUser(user)
 
-      setUsername('')
-      setPassword('')
       navigate('/')
+
       setNotification(`🎊 Welcome back ${username}!`, 5, 'info')
     } catch (error) {
       if (error.message.includes(401)) {
@@ -83,7 +83,8 @@ const App = () => {
   }
 
   const handleLogOff = () => {
-    window.localStorage.clear()
+
+    persistentUserService.removeUser()
     setUser(null)
     navigate('/')
     setNotification('Log off successful!', 5, 'success')
@@ -200,8 +201,8 @@ const App = () => {
         )}
         onError={(error, info) => {
           // Log the error to your error reporting service
-          // console.log('ERROR: ', error.message)
-          // console.log('INFO:', info)
+          console.log('ERROR: ', error.message)
+          console.log('INFO:', info)
         }}
         onReset={() => {
           // Reset any state that may have caused the error
