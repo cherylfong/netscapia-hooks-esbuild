@@ -76,10 +76,25 @@ const userExtractor = async (request, response, next) => {
   }
 }
 
+const optionalUserExtractor = async (request, response, next) => {
+  if (!request.token) return next()
+
+  try {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    if (decodedToken.id) {
+      request.user = await User.findById(decodedToken.id)
+    }
+    next()
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
   userExtractor,
+  optionalUserExtractor,
 }

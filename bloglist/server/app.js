@@ -5,6 +5,7 @@ const logger = require('./utils/logger')
 const bloglistRouter = require('./controllers/bloglists')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
+const { commentsRouter, blogCommentsRouter } = require('./controllers/comments')
 const middleware = require('./utils/middleware')
 const path = require('path')
 
@@ -26,9 +27,16 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor) // need to be before all routers - function needs to return
 
-app.use('/api/blogs', middleware.userExtractor, bloglistRouter)
+// mounts are read in order: ORDER of mounts is IMPORTANT
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
+app.use('/api/comments', commentsRouter)
+app.use(
+  '/api/blogs/:blogId/comments',
+  middleware.optionalUserExtractor,
+  blogCommentsRouter,
+)
+app.use('/api/blogs', middleware.userExtractor, bloglistRouter)
 
 if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controllers/testing')
