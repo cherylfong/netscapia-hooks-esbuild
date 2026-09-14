@@ -19,3 +19,6 @@ export const useNotificationType = () =>
 export const useNotificationActions = () =>
   useNotificationStore((state) => state.setNotification)
 
+export const setNotification = (...args) =>
+  useNotificationStore.getState().setNotification(...args)
+

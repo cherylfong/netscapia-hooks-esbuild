@@ -3,12 +3,9 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import blogService from '../services/blogs'
 import Blog from './Blog'
+import CommentSection from './CommentSection'
 
-export default function BlogPage({
-  blogs,
-  updateBlogLikes,
-  removeBlog,
-}) {
+export default function BlogPage({ blogs, updateBlogLikes, removeBlog }) {
   const { id } = useParams()
   const navigate = useNavigate()
   const [blog, setBlog] = useState(() => blogs.find((b) => b.id === id) || null)
@@ -51,11 +48,14 @@ export default function BlogPage({
   if (loading) return <div>Loading...</div>
   if (!blog) return null
   return (
-    <Blog
-      blog={blog}
-      updateBlogLikes={updateBlogLikes}
-      removeBlog={handleRemove}
-      startCollapsed={false}
-    />
+    <>
+      <Blog
+        blog={blog}
+        updateBlogLikes={updateBlogLikes}
+        removeBlog={handleRemove}
+        startCollapsed={false}
+      />
+      <CommentSection blog={blog} />
+    </>
   )
 }

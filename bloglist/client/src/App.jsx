@@ -16,6 +16,7 @@ import FilterBlogs from './components/FilterBlogs'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
+import commentService from './services/comments'
 
 import { ErrorBoundary, getErrorMessage } from 'react-error-boundary'
 import SimulatedError from './components/SimulatedError'
@@ -55,6 +56,7 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
+      commentService.setToken(user.token)
     }
   }, [setUser])
 
@@ -69,6 +71,7 @@ const App = () => {
       persistentUserService.saveUser(user)
 
       blogService.setToken(user.token)
+      commentService.setToken(user.token)
 
       setUser(user)
 

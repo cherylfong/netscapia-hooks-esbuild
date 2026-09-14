@@ -85,6 +85,7 @@ blogCommentsRouter.post(
     })
 
     const savedComment = await comment.save()
+    await savedComment.populate('user', { username: 1, name: 1 })
     response.status(201).json(savedComment)
   },
 )
