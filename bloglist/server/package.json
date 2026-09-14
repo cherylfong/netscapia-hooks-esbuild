@@ -1,5 +1,5 @@
 {
-  "name": "notebackend",
+  "name": "bloglist-backend",
   "version": "0.0.1",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "test": "NODE_ENV=test node --test",
     "start:test": "NODE_ENV=test node --watch index.js",
-    "build:ui": "cd ../../part5/bloglist-frontend/ && npm install && npm run build && cp -r dist ../../part4/bloglist/",
+    "build:ui": "cd ../client/ && npm install && npm run build && cp -r dist ../server/",
     "deploy:full": "npm run build:ui"
   },
   "dependencies": {
