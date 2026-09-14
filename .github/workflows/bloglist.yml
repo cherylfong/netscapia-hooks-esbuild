@@ -8,6 +8,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      PORT: 3001
+      SECRET: ${{ secrets.BLOGLIST_SECRET }}
+      TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
     steps:
       - uses: actions/checkout@v4
 
