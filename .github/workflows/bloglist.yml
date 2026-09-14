@@ -15,11 +15,15 @@ jobs:
         with:
           node-version: 24
 
-      - name: Install app dependencies
-        working-directory: bloglist-tests
+      - name: Install server dependencies
+        working-directory: bloglist/server
         run: npm ci
 
-      - name: Install test dependencies
+      - name: Install client dependencies
+        working-directory: bloglist/client
+        run: npm ci
+
+      - name: Install Playwright test dependencies
         working-directory: bloglist-tests
         run: npm ci
 
