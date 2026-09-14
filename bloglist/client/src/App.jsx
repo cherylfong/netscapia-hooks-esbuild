@@ -185,7 +185,7 @@ const App = () => {
             to="/users"
             sx={styleToolBar}
           >
-            Users
+            users
           </Button>
 
           <Button

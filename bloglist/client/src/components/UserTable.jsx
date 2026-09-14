@@ -80,17 +80,14 @@ export default function StickyHeadTable() {
                     <TableRow
                       hover
                       key={row.id}
-                      component={Link}
-                      to={`/users/${row.id}`}
-                      sx={{
-                        textDecoration: 'none',
-                        color: 'inherit',
-                        cursor: 'pointer',
-                      }}
                     >
                       {columns.map((column) => (
                         <TableCell key={column.id} align={column.align}>
-                          {row[column.id]}
+                          {column.id === 'name' ? (
+                            <Link to={`/users/${row.id}`}>{row.name}</Link>
+                          ) : (
+                            row[column.id]
+                          )}
                         </TableCell>
                       ))}
                     </TableRow>
