@@ -2,6 +2,8 @@ This is [part 7 of the fullstack open course](https://fullstackopen.com/en/part7
 
 ### Github Actions Test Status
 
+Branches `part7-b`, `part7-c`, and `part7-d` do not have triggered tests through GitHub workflow actions.
+
 <details>
 <summary>part7-a</summary>
 
@@ -11,19 +13,9 @@ This is [part 7 of the fullstack open course](https://fullstackopen.com/en/part7
 <br/>
 
 <details>
-<summary>part7-b</summary>
-NONE 🪹
-</details>
-<br/>
+<summary>part7-playwright-testing</summary>
 
-<details>
-<summary>part7-c</summary>
-NONE 🪹
-</details>
-<br/>
-
-<details>
-<summary>part7-d</summary>
+[![bloglist tests](https://github.com/cherylfong/netscapia-hooks-esbuild/actions/workflows/bloglist.yml/badge.svg)](https://github.com/cherylfong/netscapia-hooks-esbuild/actions/workflows/bloglist.yml)
 
 </details>
 
