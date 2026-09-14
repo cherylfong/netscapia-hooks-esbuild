@@ -136,7 +136,7 @@ const App = () => {
           </Button>
 
           <Button color="inherit" component={Link} to="/" sx={styleToolBar}>
-            BLOGS
+            blogs
           </Button>
 
           {user && (
