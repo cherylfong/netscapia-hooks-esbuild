@@ -96,23 +96,7 @@ export default function BasicStack({ blog }) {
         </form>
         <Stack spacing={2}>
           {comments.map((comment, idx) => (
-            <Item id={`comment-${idx}`}>
-              {comment.content}
-              <pre style={{ fontSize: '11px' }}>
-                {formatCreatedAt(comment.createdAt)}
-              </pre>
-              <Button
-                style={{
-                  display: loggedInUserID === comment.user?.id ? '' : 'none',
-                  fontSize: '8px',
-                }}
-                size="small"
-                color="error"
-                onClick={() => removeComment(comment.id)}
-              >
-                remove
-              </Button>
-            </Item>
+            <Item id={`comment-${idx}`}>{comment.content}</Item>
           ))}
         </Stack>
       </Box>

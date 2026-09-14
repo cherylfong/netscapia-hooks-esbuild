@@ -28,6 +28,7 @@ export const login = async (page, { username, password }) => {
   await inputs.nth(0).fill(username)
   await inputs.nth(1).fill(password)
   await page.getByRole('button', { name: 'login' }).click()
+  await page.waitForURL('**/')
   await page.getByRole('button', { name: 'logout' }).waitFor()
 }
 

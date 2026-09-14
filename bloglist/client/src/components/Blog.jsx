@@ -54,10 +54,12 @@ const Blog = ({
   return (
     <div style={blogItemStyle}>
       <p id={`title-author-test-${counter}`}>
-        <b>
-          <i>{blog.title}</i>
-        </b>{' '}
-        by {blog.author} | <Link to={`/${blog.id}`}>Details</Link>
+        <Link to={`/${blog.id}`}>
+          <b>
+            <i>{blog.title}</i>
+          </b>
+        </Link>
+        <p>By {blog.author}</p>
       </p>
 
       <div style={{ display: view ? 'none' : '' }}>

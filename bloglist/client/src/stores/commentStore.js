@@ -24,7 +24,7 @@ const commentStore = create(
             newComment,
           )
           set((state) => ({ comments: [comment, ...state.comments] }))
-          setNotification(`Comment added: ${newComment.content}`, 5, 'success')
+          setNotification('Comment added!', 5, 'success')
           return true
         } catch (error) {
           setNotification(`ERROR: ${error.message}`, 5, 'error')

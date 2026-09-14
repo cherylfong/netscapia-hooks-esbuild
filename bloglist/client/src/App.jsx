@@ -158,7 +158,7 @@ const App = () => {
               onClick={handleLogOff}
               sx={styleToolBar}
             >
-              Logout
+              logout
             </Button>
           )}
 
@@ -175,7 +175,7 @@ const App = () => {
               to="/login"
               sx={styleToolBar}
             >
-              LOGIN
+              login
             </Button>
           )}
 
