@@ -18,6 +18,7 @@ const FilterBlogs = ({ blogs, updateBlogLikes, removeBlog }) => {
 
   return (
     <>
+      <h3>blogs</h3>
       <p style={{ fontSize: 'small' }}>
         **All users including unauthenticated users can <b>like</b> blog items.
       </p>
